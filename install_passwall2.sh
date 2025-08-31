@@ -25,8 +25,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
-# Color codes for UI
-. lib.sh
+. $(pwd)/lib.sh
 # Parse command-line arguments
 iran_hosted_domains=0
 tcp_all=0
