@@ -55,7 +55,7 @@ install_package() {
 }
 
 # Main script
-info "Starting Amnezia AWG installation on OpenWRT $DISTRIB_RELEASE"
+info "Starting Amnezia WG installation on OpenWRT $DISTRIB_RELEASE"
 
 # Check if /etc/openwrt_release exists
 if [ ! -f /etc/openwrt_release ]; then
