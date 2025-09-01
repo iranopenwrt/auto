@@ -206,4 +206,4 @@ if [ "$install_amneziawg" = "true" ]; then
     execute_script "install_amneziawg.sh" "https://raw.githubusercontent.com/iranopenwrt/auto/refs/heads/main/install_amneziawg.sh"
 fi
 
-success "All requested installations completed.
+success "All requested installations completed."
