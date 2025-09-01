@@ -58,14 +58,12 @@ chmod +x install.sh
 ### مثال:
 نصب پسوال ۲ بهمراه لیست وبسایتها و آدرسهای آیپی ایران 
 ```sh
-cd /tmp/ && wget https://raw.githubusercontent.com/iranopenwrt/auto/main/install.sh
- && sh install.sh --passwall2 --ir --tcp-all
+cd /tmp/ && wget https://raw.githubusercontent.com/iranopenwrt/auto/main/install.sh && sh install.sh --passwall2 --ir --tcp-all
 ```
 نصب پسوال۲ بهمراه لیست وبسایتها و آدرسهای آیپی ایران و AmneziaWG
 
 ```sh
-cd /tmp/ && wget https://raw.githubusercontent.com/iranopenwrt/auto/main/install.sh
- && sh install.sh --passwall2 --ir --tcp-all --amneziawg
+cd /tmp/ && wget https://raw.githubusercontent.com/iranopenwrt/auto/main/install.sh && sh install.sh --passwall2 --ir --tcp-all --amneziawg
 ```
 ---
 
