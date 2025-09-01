@@ -3,9 +3,12 @@
 # Parent script to perform pre-installation checks and execute OpenWrt tool installation scripts.
 # Performs network, DNS, and GitHub connectivity tests before downloading and running user-selected scripts.
 # Outputs of test commands are printed to the screen.
+# Supports additional options for Passwall2 installation.
 #
-# Usage: ./main.sh [--passwall2] [--amneziawg]
+# Usage: ./install.sh [--passwall2] [--ir] [--tcp] [--amneziawg]
 #   --passwall2: Install Passwall2 without prompt
+#   --ir: Enable Iranian Geolists for Passwall2
+#   --tcp-all: Forward all TCP traffic for Passwall2 (equivalent to --tcp-all)
 #   --amneziawg: Install AmneziaWG without prompt
 #
 # Copyright (C) 2025 IranWRT
@@ -32,35 +35,35 @@ BLUE='\033[0;34m'
 NC='\033[0m' # No Color
 
 # Function to print info
-info() (
+info() {
     echo -e "${BLUE}[INFO]${NC} $1"
-)
+}
 
 # Function to print success
-success() (
+success() {
     echo -e "${GREEN}[SUCCESS]${NC} $1"
-)
+}
 
 # Function to print warning
-warning() (
+warning() {
     echo -e "${YELLOW}[WARNING]${NC} $1"
-)
+}
 
 # Function to print error and exit
-error() (
+error() {
     echo -e "${RED}[ERROR]${NC} $1"
     exit 1
-)
+}
 
 # Function to check command success
-check_status() (
+check_status() {
     if [ $? -ne 0 ]; then
         error "$1 failed."
     fi
-)
+}
 
 # Function to prompt user yes/no
-prompt_yes_no() (
+prompt_yes_no() {
     while true; do
         echo -e "${YELLOW}[QUESTION]${NC} $1 (y/n): "
         read yn
@@ -70,10 +73,10 @@ prompt_yes_no() (
             * ) echo "Please answer y or n.";;
         esac
     done
-)
+}
 
 # Function to check GitHub connectivity by downloading lib.sh
-githubtest() (
+githubtest() {
     local lib_url="https://raw.githubusercontent.com/iranopenwrt/auto/refs/heads/main/lib.sh"
     local lib_file="/tmp/lib.sh"
 
@@ -81,10 +84,10 @@ githubtest() (
     wget -q -O "$lib_file" "$lib_url" 2>&1 | tee /dev/tty
     check_status "GitHub connectivity test (downloading lib.sh)"
     success "GitHub connectivity test passed."
-)
+}
 
 # Function to check internet connectivity
-check_internet() (
+check_internet() {
     info "Checking internet connectivity by pinging 8.8.8.8..."
     ping -c 4 8.8.8.8 | tee /dev/tty
     if [ $? -eq 0 ]; then
@@ -92,10 +95,10 @@ check_internet() (
     else
         error "No internet connectivity. Please check your network connection."
     fi
-)
+}
 
 # Function to check DNS resolution
-check_dns() (
+check_dns() {
     info "Checking DNS resolution for downloads.openwrt.org..."
     nslookup downloads.openwrt.org | tee /dev/tty
     if [ $? -eq 0 ]; then
@@ -111,10 +114,10 @@ check_dns() (
     else
         error "DNS resolution for master.dl.sourceforge.net failed. Please check your DNS settings."
     fi
-)
+}
 
 # Function to check package download
-check_package_download() (
+check_package_download() {
     local lib_file="/tmp/lib.sh"
     [ -f "$lib_file" ] || error "lib.sh not found in /tmp/. Please run githubtest first."
 
@@ -138,12 +141,13 @@ EOF
     else
         error "Failed to access package at $url. Please check your internet or SourceForge access."
     fi
-)
+}
 
 # Function to download and execute a script
-execute_script() (
+execute_script() {
     local script_name="$1"
     local url="$2"
+    local extra_args="$3"
     local temp_script="/tmp/$script_name"
 
     info "Downloading $script_name from $url..."
@@ -154,22 +158,26 @@ execute_script() (
     chmod +x "$temp_script"
     check_status "Making $script_name executable"
 
-    info "Executing $script_name..."
-    sh "$temp_script"
+    info "Executing $script_name with args: $extra_args..."
+    sh "$temp_script" $extra_args
     check_status "Executing $script_name"
 
     info "Cleaning up $script_name..."
     rm -f "$temp_script"
     success "$script_name executed successfully."
-)
+}
 
 # Parse command-line arguments
 install_passwall2=false
+ir=false
+tcp_all=false
 install_amneziawg=false
 
 while [ $# -gt 0 ]; do
     case "$1" in
         --passwall2) install_passwall2=true ;;
+        --ir) ir=true ;;
+        --tcp-all) tcp_all=true ;;
         --amneziawg) install_amneziawg=true ;;
         *) warning "Unknown argument: $1" ;;
     esac
@@ -199,11 +207,14 @@ fi
 
 # Execute selected installations
 if [ "$install_passwall2" = "true" ]; then
-    execute_script "install_passwall2.sh" "https://raw.githubusercontent.com/iranopenwrt/auto/refs/heads/main/install_passwall2.sh"
+    extra_args=""
+    [ "$ir" = "true" ] && extra_args="$extra_args --ir"
+    [ "$tcp_all" = "true" ] && extra_args="$extra_args --tcp-all"
+    execute_script "install_passwall2.sh" "https://raw.githubusercontent.com/iranopenwrt/auto/refs/heads/main/install_passwall2.sh" "$extra_args"
 fi
 
 if [ "$install_amneziawg" = "true" ]; then
-    execute_script "install_amneziawg.sh" "https://raw.githubusercontent.com/iranopenwrt/auto/refs/heads/main/install_amneziawg.sh"
+    execute_script "install_amneziawg.sh" "https://raw.githubusercontent.com/iranopenwrt/auto/refs/heads/main/install_amneziawg.sh" ""
 fi
 
 success "All requested installations completed."
