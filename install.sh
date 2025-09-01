@@ -5,10 +5,10 @@
 # Outputs of test commands are printed to the screen.
 # Supports additional options for Passwall2 installation.
 #
-# Usage: ./install.sh [--passwall2] [--ir] [--tcp] [--amneziawg]
+# Usage: ./install.sh [--passwall2] [--ir] [--tcp-all] [--amneziawg]
 #   --passwall2: Install Passwall2 without prompt
 #   --ir: Enable Iranian Geolists for Passwall2
-#   --tcp-all: Forward all TCP traffic for Passwall2 (equivalent to --tcp-all)
+#   --tcp-all: Forward all TCP traffic for Passwall2 
 #   --amneziawg: Install AmneziaWG without prompt
 #
 # Copyright (C) 2025 IranWRT
@@ -81,7 +81,7 @@ githubtest() {
     local lib_file="/tmp/lib.sh"
 
     info "Checking GitHub connectivity by downloading lib.sh from $lib_url..."
-    wget -q -O "$lib_file" "$lib_url" 2>&1 | tee /dev/tty
+    wget -q -O "$lib_file" "$lib_url" 2>&1
     check_status "GitHub connectivity test (downloading lib.sh)"
     success "GitHub connectivity test passed."
 }
@@ -89,7 +89,7 @@ githubtest() {
 # Function to check internet connectivity
 check_internet() {
     info "Checking internet connectivity by pinging 8.8.8.8..."
-    ping -c 4 8.8.8.8 | tee /dev/tty
+    ping -c 4 8.8.8.8 2>&1
     if [ $? -eq 0 ]; then
         success "Internet connectivity test passed."
     else
@@ -100,7 +100,7 @@ check_internet() {
 # Function to check DNS resolution
 check_dns() {
     info "Checking DNS resolution for downloads.openwrt.org..."
-    nslookup downloads.openwrt.org | tee /dev/tty
+    nslookup downloads.openwrt.org 2>&1
     if [ $? -eq 0 ]; then
         success "DNS resolution for downloads.openwrt.org passed."
     else
@@ -108,7 +108,7 @@ check_dns() {
     fi
 
     info "Checking DNS resolution for master.dl.sourceforge.net..."
-    nslookup master.dl.sourceforge.net | tee /dev/tty
+    nslookup master.dl.sourceforge.net 2>&1
     if [ $? -eq 0 ]; then
         success "DNS resolution for master.dl.sourceforge.net passed."
     else
@@ -186,9 +186,9 @@ done
 
 # Perform pre-installation checks
 info "Starting pre-installation checks..."
-githubtest
 check_internet
 check_dns
+githubtest
 check_package_download
 success "All pre-installation checks passed."
 
