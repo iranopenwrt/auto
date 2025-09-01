@@ -101,7 +101,7 @@ case "$DISTRIB_ARCH" in
 esac
 
 # Define recommended packages
-RECOMMENDED_PACKAGES="coreutils coreutils-base64 coreutils-nohup curl ip-full kmod-nft-socket kmod-nft-tproxy libc libuci-lua lua luci-compat luci-lib-jsonc luci-lua-runtime resolveip unzip v2ray-geoip v2ray-geosite v2ray-geosite-ir wget-ssl xray-core"
+RECOMMENDED_PACKAGES="-dnsmasq coreutils coreutils-base64 coreutils-nohup curl ip-full kmod-nft-socket kmod-nft-tproxy libc libuci-lua lua luci-compat luci-lib-jsonc luci-lua-runtime resolveip unzip v2ray-geoip v2ray-geosite v2ray-geosite-ir wget-ssl kmod-inet-diag kmod-netlink-diag kmod-tun dnsmasq-full xray-core"
 
 # Check OpenWrt version and provide upgrade instructions
 # Extract major and minor version numbers
