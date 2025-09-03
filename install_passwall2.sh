@@ -29,6 +29,19 @@
 # Parse command-line arguments
 iran_hosted_domains=0
 tcp_all=0
+
+
+# If no arguments were provided, prompt for installations
+if [ $# -eq 0 ]; then
+    if prompt_yes_no "Do you want to install and configure list of Iranian websites to Passwall2?"; then
+        iran_hosted_domains=true
+    fi
+
+    if prompt_yes_no "Do you want to forward all TCP traffic (ports 1:65535) instead of common ports? (Optional)"; then
+        tcp_all=true
+    fi
+fi
+
 while [ $# -gt 0 ]; do
     case "$1" in
         --ir)
@@ -238,7 +251,7 @@ done
 success "luci-app-passwall2 installed."
 
 # Step 7: Install and configure Iran Hosted Domain list
-if [ $iran_hosted_domains -eq 1 ] || prompt_yes_no "Do you want to install and configure list of Iranian websites to Passwall2?"; then
+if [ $iran_hosted_domains -eq 1 ]; then
     if ! is_installed "luci-app-passwall2"; then
         error "luci-app-passwall2 is not installed. Cannot configure Iran-specific settings."
     fi
@@ -289,7 +302,7 @@ else
 fi
 
 # Step 8: Forward all TCP traffic
-if [ $tcp_all -eq 1 ] || prompt_yes_no "Do you want to forward all TCP traffic (ports 1:65535) instead of common ports? (Optional)"; then
+if [ $tcp_all -eq 1 ]; then
     info "Modifying TCP redirect ports..."
     for file in /usr/share/passwall2/0_default_config /etc/config/passwall2; do
         if [ ! -f "$file" ]; then
