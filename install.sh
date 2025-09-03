@@ -4,14 +4,16 @@
 # Performs network, DNS, and GitHub connectivity tests before downloading and running user-selected scripts.
 # Outputs of test commands are printed to the screen.
 # Supports additional options for Passwall2 installation.
+# Installs only specified components without prompts when flags are provided; others default to no.
+# If no arguments are provided, prompts for Y/n for each installation.
 #
 # Usage: ./install.sh [--passwall2] [--ir] [--tcp-all] [--amneziawg]
 #   --passwall2: Install Passwall2 without prompt
-#   --ir: Enable Iranian Geolists for Passwall2
-#   --tcp-all: Forward all TCP traffic for Passwall2 
+#   --ir: Enable Iranian rebind domains for Passwall2
+#   --tcp-all: Forward all TCP traffic for Passwall2
 #   --amneziawg: Install AmneziaWG without prompt
 #
-# Copyright (C) 2025 IranWRT
+# Copyright (C) 2025 Your Name or Organization
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -89,7 +91,7 @@ githubtest() {
 # Function to check internet connectivity
 check_internet() {
     info "Checking internet connectivity by pinging 8.8.8.8..."
-    ping -c 4 8.8.8.8 2>&1
+    ping -c 4 8.8.8.8
     if [ $? -eq 0 ]; then
         success "Internet connectivity test passed."
     else
@@ -100,7 +102,7 @@ check_internet() {
 # Function to check DNS resolution
 check_dns() {
     info "Checking DNS resolution for downloads.openwrt.org..."
-    nslookup downloads.openwrt.org 2>&1
+    nslookup downloads.openwrt.org
     if [ $? -eq 0 ]; then
         success "DNS resolution for downloads.openwrt.org passed."
     else
@@ -108,7 +110,7 @@ check_dns() {
     fi
 
     info "Checking DNS resolution for master.dl.sourceforge.net..."
-    nslookup master.dl.sourceforge.net 2>&1
+    nslookup master.dl.sourceforge.net
     if [ $? -eq 0 ]; then
         success "DNS resolution for master.dl.sourceforge.net passed."
     else
@@ -135,7 +137,7 @@ check_package_download() {
 EOF
     local url="https://master.dl.sourceforge.net/project/openwrt-passwall-build/releases/packages-$release/$arch/passwall2/Packages.gz"
     info "Checking ability to download package from $url..."
-    wget -q --spider "$url" 2>&1 | tee /dev/tty
+    wget -q --spider "$url" 2>&1
     if [ $? -eq 0 ]; then
         success "Package download test passed."
     else
@@ -167,6 +169,9 @@ execute_script() {
     success "$script_name executed successfully."
 }
 
+# Save original argument count
+original_arg_count=$#
+
 # Parse command-line arguments
 install_passwall2=false
 ir=false
@@ -175,10 +180,10 @@ install_amneziawg=false
 
 while [ $# -gt 0 ]; do
     case "$1" in
-        --passwall2) install_passwall2=true ;;
+        --passwall2|--paswall2) install_passwall2=true ;;
         --ir) ir=true ;;
-        --tcp-all) tcp_all=true ;;
-        --amneziawg) install_amneziawg=true ;;
+        --tcp|--tcp-all) tcp_all=true ;;
+        --amneziawg|--amneziaawg) install_amneziawg=true ;;
         *) warning "Unknown argument: $1" ;;
     esac
     shift
@@ -186,20 +191,18 @@ done
 
 # Perform pre-installation checks
 info "Starting pre-installation checks..."
+githubtest
 check_internet
 check_dns
-githubtest
 check_package_download
 success "All pre-installation checks passed."
 
-# Prompt for installations if not specified via arguments
-if [ "$install_passwall2" != "true" ]; then
+# If no arguments were provided, prompt for installations
+if [ $original_arg_count -eq 0 ]; then
     if prompt_yes_no "Would you like to install Passwall2?"; then
         install_passwall2=true
     fi
-fi
 
-if [ "$install_amneziawg" != "true" ]; then
     if prompt_yes_no "Would you like to install AmneziaWG?"; then
         install_amneziawg=true
     fi
