@@ -1,0 +1,143 @@
+name: Update Iran IP list from v2fly/geoip
+
+on:
+  schedule:
+    - cron: '0 * */2 * *'  
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+jobs:
+  update-geoip:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: true
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Get latest v2fly/geoip release tag
+        id: get_release
+        run: |
+          TAG=$(curl -s https://api.github.com/repos/v2fly/geoip/releases/latest | python3 -c "import sys,json; j=json.load(sys.stdin); print(j.get('tag_name',''))")
+          if [ -z "$TAG" ]; then
+            echo "tag=" >> $GITHUB_OUTPUT
+          else
+            echo "tag=$TAG" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Read last processed tag
+        id: read_last
+        run: |
+          if [ -f .github/geoip_latest.txt ]; then
+            LAST=$(cat .github/geoip_latest.txt | tr -d '\n')
+          else
+            LAST=""
+          fi
+          echo "last=$LAST" >> $GITHUB_OUTPUT
+
+      - name: Skip if release already processed
+        if: ${{ steps.get_release.outputs.tag == steps.read_last.outputs.last }}
+        run: |
+          echo "No new release. Current latest tag is '${{ steps.get_release.outputs.tag }}'. Exiting."
+      
+      - name: Setup Go
+        if: ${{ steps.get_release.outputs.tag != steps.read_last.outputs.last }}
+        uses: actions/setup-go@v4
+        with:
+          go-version: '1.21'  # یا هر نسخه‌ای که لازم داری
+
+      - name: Ensure git installed (runner already has it, this is defensive)
+        if: ${{ steps.get_release.outputs.tag != steps.read_last.outputs.last }}
+        run: sudo apt-get update && sudo apt-get install -y git curl
+
+      - name: Clone v2fly/geoip
+        if: ${{ steps.get_release.outputs.tag != steps.read_last.outputs.last }}
+        run: git clone https://github.com/v2fly/geoip.git
+
+      - name: Create config.json in geoip repo
+        if: ${{ steps.get_release.outputs.tag != steps.read_last.outputs.last }}
+        run: |
+          cat > geoip/config.json <<'JSON'
+{
+  "input": [
+    {
+      "type": "v2rayGeoIPDat",
+      "action": "add",
+      "args": {
+        "uri": "./geoip.dat"
+      }
+    }
+  ],
+  "output": [
+    {
+      "type": "text",
+      "action": "output",
+      "args": {
+        "outputDir": "./",
+        "oneFilePerList": true,
+        "wantedList": ["ir"],
+        "onlyIPType": "ipv4"
+      }
+    }
+  ]
+}
+JSON
+
+      - name: Download latest geoip.dat
+        if: ${{ steps.get_release.outputs.tag != steps.read_last.outputs.last }}
+        run: |
+          # direct download path for the asset (GitHub supports /latest/download/<name>)
+          curl -L -o geoip/geoip.dat "https://github.com/v2fly/geoip/releases/latest/download/geoip.dat"
+          ls -l geoip/geoip.dat
+
+      - name: Build dependencies and run generator
+        if: ${{ steps.get_release.outputs.tag != steps.read_last.outputs.last }}
+        working-directory: geoip
+        run: |
+          go mod download
+          # run generator with config.json
+          go run ./ -c config.json
+
+      - name: Prepare one-line IR list and update target file
+        if: ${{ steps.get_release.outputs.tag != steps.read_last.outputs.last }}
+        run: |
+          # geoip generator should have produced ./ir.txt in geoip/
+          if [ ! -f geoip/ir.txt ]; then
+            echo "geoip/ir.txt not found! Exiting with error." >&2
+            ls -la geoip
+            exit 2
+          fi
+          # convert newlines to spaces (keep it a single-line list)
+          tr '\r\n' ' ' < geoip/ir.txt | sed 's/  */ /g' > /tmp/ir_one_line.txt
+          # ensure trailing newline
+          sed -n '1p' /tmp/ir_one_line.txt > /tmp/ir_one_line_with_nl.txt
+          printf "\n" >> /tmp/ir_one_line_with_nl.txt
+
+          # create resources dir if missing (defensive)
+          mkdir -p resources
+          # move to repo file
+          mv /tmp/ir_one_line_with_nl.txt resources/pbr-iplist-iran-v4
+          echo "Updated resources/pbr-iplist-iran-v4 with new data."
+
+      - name: Commit & push only if changed
+        if: ${{ steps.get_release.outputs.tag != steps.read_last.outputs.last }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          # record new processed tag
+          echo "${{ steps.get_release.outputs.tag }}" > .github/geoip_latest.txt
+          git add resources/pbr-iplist-iran-v4 .github/geoip_latest.txt
+
+          # check if any changes staged
+          if git diff --cached --quiet; then
+            echo "No changes to commit."
+            exit 0
+          fi
+
+          git commit -m "Update pbr-iplist-iran-v4 from v2fly/geoip release ${{ steps.get_release.outputs.tag }}"
+          git push origin HEAD:main
