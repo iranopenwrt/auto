@@ -61,7 +61,7 @@ jobs:
       - name: Create config.json in geoip repo
         if: ${{ steps.get_release.outputs.tag != steps.read_last.outputs.last }}
         run: |
-          cat > geoip/config.json <<'JSON'
+          cat > geoip/config.json <<EOF
 {
   "input": [
     {
@@ -85,7 +85,7 @@ jobs:
     }
   ]
 }
-JSON
+EOF
 
       - name: Download latest geoip.dat
         if: ${{ steps.get_release.outputs.tag != steps.read_last.outputs.last }}
