@@ -56,6 +56,11 @@ chmod +x install.sh
 * `--amneziawg`: نصب AmneziaWG بدون پرسش.
 
 ### مثال:
+نصب امنیزیا وایرگارد بهمراه pbr و آدرسهای آي پی ایران:
+```sh
+cd /tmp/ && wget -O install.sh https://raw.githubusercontent.com/iranopenwrt/auto/main/install.sh && sh install.sh --amnezia --pbr --ir
+```
+
 نصب پسوال ۲ بهمراه لیست وبسایتها و آدرسهای آیپی ایران 
 ```sh
 cd /tmp/ && wget -O install.sh https://raw.githubusercontent.com/iranopenwrt/auto/main/install.sh && sh install.sh --passwall2 --ir --tcp-all
