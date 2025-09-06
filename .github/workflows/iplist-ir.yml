@@ -61,9 +61,6 @@ jobs:
       - name: Create config.json in geoip repo
         if: ${{ steps.get_release.outputs.tag != steps.read_last.outputs.last }}
         run: |
-              - name: Create config.json in geoip repo
-        if: ${{ steps.get_release.outputs.tag != steps.read_last.outputs.last }}
-        run: |
           cat <<'EOF' > geoip/config.json
           {
             "input": [
