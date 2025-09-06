@@ -68,6 +68,24 @@ if is_installed luci-app-passwall2; then
     warning "Conflict detected: luci-app-passwall2 is installed. pbr may conflict with it."
 fi
 
+# Step 2: Remove dnsmasq and install dnsmasq-full
+info "Handling dnsmasq..."
+if is_installed "dnsmasq-full"; then
+    warning "dnsmasq-full is already installed. Skipping removal and install."
+else
+    if is_installed "dnsmasq"; then
+        info "To ensure compatibility, consider including these packages in a firmware upgrade via the OpenWrt Firmware Selector:"
+        info "$RECOMMENDED_PACKAGES"
+        info "Visit: https://firmware-selector.openwrt.org/?version=24.10.2&target=$TARGET&id=$DEVICE_ID"
+        opkg remove dnsmasq
+        check_status "opkg remove dnsmasq"
+    fi
+    opkg install dnsmasq-full
+    check_status "opkg install dnsmasq-full"
+fi
+success "dnsmasq-full handled."
+
+
 # Install pbr if luci-app-pbr is not installed
 if ! is_installed luci-app-pbr; then
     info "Updating package list..."
