@@ -56,16 +56,16 @@ chmod +x install.sh
 * `--amneziawg`: نصب AmneziaWG بدون پرسش.
 
 ### مثال:
-نصب امنیزیا وایرگارد بهمراه pbr و آدرسهای آي پی ایران:
+نصب امنیزیا وایرگارد بهمراه pbr و آدرسهای آي پی ایران مناسب برای همه روترهای دارای پشتیبانی از آخرین نسخه OpenWrt:
 ```sh
 cd /tmp/ && wget -O install.sh https://raw.githubusercontent.com/iranopenwrt/auto/main/install.sh && sh install.sh --amnezia --pbr --ir
 ```
 
-نصب پسوال ۲ بهمراه لیست وبسایتها و آدرسهای آیپی ایران 
+نصب پسوال ۲ بهمراه لیست وبسایتها و آدرسهای آیپی ایران مناسب برای روترهای دارای حداقل پردازنده Arm 64 دو هسته ای و ۲۵۶ مگابایت رم(‌۵۱۲ مگ رم به بالا پیشنهاد میشود):
 ```sh
 cd /tmp/ && wget -O install.sh https://raw.githubusercontent.com/iranopenwrt/auto/main/install.sh && sh install.sh --passwall2 --ir --tcp-all
 ```
-نصب پسوال۲ بهمراه لیست وبسایتها و آدرسهای آیپی ایران و AmneziaWG
+ نصب پسوال۲ بهمراه لیست وبسایتها و آدرسهای آیپی ایران و AmneziaWG. برای استفاده ترکیبی از پروتوکل ها حداقل پردازنده Arm 64 چهار هسته ای و ۱ گیگابایت رم:
 
 ```sh
 cd /tmp/ && wget -O install.sh https://raw.githubusercontent.com/iranopenwrt/auto/main/install.sh && sh install.sh --passwall2 --ir --tcp-all --amneziawg
