@@ -61,7 +61,34 @@ jobs:
       - name: Create config.json in geoip repo
         if: ${{ steps.get_release.outputs.tag != steps.read_last.outputs.last }}
         run: |
-          echo "{"input":[{"type":"v2rayGeoIPDat","action":"add","args":{"uri":"./geoip.dat"}}],"output":[{"type":"text","action":"output","args":{"outputDir":"./","oneFilePerList":true,"wantedList":["ir"],"onlyIPType":"ipv4"}}]}" > geoip/config.json 
+              - name: Create config.json in geoip repo
+        if: ${{ steps.get_release.outputs.tag != steps.read_last.outputs.last }}
+        run: |
+          cat <<'EOF' > geoip/config.json
+          {
+            "input": [
+              {
+                "type": "v2rayGeoIPDat",
+                "action": "add",
+                "args": {
+                  "uri": "./geoip.dat"
+                }
+              }
+            ],
+            "output": [
+              {
+                "type": "text",
+                "action": "output",
+                "args": {
+                  "outputDir": "./",
+                  "oneFilePerList": true,
+                  "wantedList": ["ir"],
+                  "onlyIPType": "ipv4"
+                }
+              }
+            ]
+          }
+          EOF
 
       - name: Download latest geoip.dat
         if: ${{ steps.get_release.outputs.tag != steps.read_last.outputs.last }}
