@@ -12,8 +12,9 @@
 #   --ir: Enable Iranian rebind domains for Passwall2
 #   --tcp-all: Forward all TCP traffic for Passwall2
 #   --amneziawg: Install AmneziaWG without prompt
+#   --pbr: Install PBR without prompt
 #
-# Copyright (C) 2025 Your Name or Organization
+# Copyright (C) 2025 IranWRT
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -177,6 +178,7 @@ install_passwall2=false
 ir=false
 tcp_all=false
 install_amneziawg=false
+install_pbr=false
 
 while [ $# -gt 0 ]; do
     case "$1" in
@@ -184,6 +186,7 @@ while [ $# -gt 0 ]; do
         --ir) ir=true ;;
         --tcp|--tcp-all) tcp_all=true ;;
         --amneziawg|--amneziaawg) install_amneziawg=true ;;
+        --pbr) install_pbr=true ;;
         *) warning "Unknown argument: $1" ;;
     esac
     shift
@@ -206,6 +209,9 @@ if [ $original_arg_count -eq 0 ]; then
     if prompt_yes_no "Would you like to install AmneziaWG?"; then
         install_amneziawg=true
     fi
+    if prompt_yes_no "Would you like to install PBR?"; then
+        install_pbr=true
+    fi
 fi
 
 # Execute selected installations
@@ -218,6 +224,11 @@ fi
 
 if [ "$install_amneziawg" = "true" ]; then
     execute_script "install_amneziawg.sh" "https://raw.githubusercontent.com/iranopenwrt/auto/refs/heads/main/install_amneziawg.sh" ""
+fi
+if [ "$install_pbr" = "true" ]; then
+    extra_args=""
+    [ "$ir" = "true" ] && extra_args="$extra_args --ir"
+    execute_script "install_pbr.sh" "https://raw.githubusercontent.com/iranopenwrt/auto/refs/heads/main/install_pbr.sh" "$extra_args"
 fi
 
 success "All requested installations completed."
