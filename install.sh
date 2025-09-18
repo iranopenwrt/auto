@@ -3,18 +3,19 @@
 # Parent script to perform pre-installation checks and execute OpenWrt tool installation scripts.
 # Performs network, DNS, and GitHub connectivity tests before downloading and running user-selected scripts.
 # Outputs of test commands are printed to the screen.
-# Supports additional options for Passwall2 installation.
+# Supports additional options for Passwall2 and PBR installation.
 # Installs only specified components without prompts when flags are provided; others default to no.
 # If no arguments are provided, prompts for Y/n for each installation.
+# Skips downloading scripts if they already exist in /tmp/.
 #
-# Usage: ./install.sh [--passwall2] [--ir] [--tcp-all] [--amneziawg]
+# Usage: ./install.sh [--passwall2] [--ir] [--tcp-all] [--amneziawg] [--pbr]
 #   --passwall2: Install Passwall2 without prompt
-#   --ir: Enable Iranian rebind domains for Passwall2
+#   --ir: Enable Iranian rebind domains for Passwall2 and PBR
 #   --tcp-all: Forward all TCP traffic for Passwall2
 #   --amneziawg: Install AmneziaWG without prompt
 #   --pbr: Install PBR without prompt
 #
-# Copyright (C) 2025 IranWRT
+# Copyright (C) 2025 Your Name or Organization
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -153,9 +154,13 @@ execute_script() {
     local extra_args="$3"
     local temp_script="/tmp/$script_name"
 
-    info "Downloading $script_name from $url..."
-    wget -O "$temp_script" "$url"
-    check_status "Downloading $script_name"
+    if [ -f "$temp_script" ] && [ -x "$temp_script" ]; then
+        info "Script $script_name already exists and is executable, skipping download."
+    else
+        info "Downloading $script_name from $url..."
+        wget -O "$temp_script" "$url"
+        check_status "Downloading $script_name"
+    fi
 
     info "Making $script_name executable..."
     chmod +x "$temp_script"
@@ -185,7 +190,7 @@ while [ $# -gt 0 ]; do
         --passwall2|--paswall2) install_passwall2=true ;;
         --ir) ir=true ;;
         --tcp|--tcp-all) tcp_all=true ;;
-        --amneziawg|--amneziaawg|--amnezia) install_amneziawg=true ;;
+        --amneziawg|--amneziaawg) install_amneziawg=true ;;
         --pbr) install_pbr=true ;;
         *) warning "Unknown argument: $1" ;;
     esac
@@ -209,6 +214,7 @@ if [ $original_arg_count -eq 0 ]; then
     if prompt_yes_no "Would you like to install AmneziaWG?"; then
         install_amneziawg=true
     fi
+
     if prompt_yes_no "Would you like to install PBR?"; then
         install_pbr=true
     fi
@@ -225,6 +231,7 @@ fi
 if [ "$install_amneziawg" = "true" ]; then
     execute_script "install_amneziawg.sh" "https://raw.githubusercontent.com/iranopenwrt/auto/refs/heads/main/install_amneziawg.sh" ""
 fi
+
 if [ "$install_pbr" = "true" ]; then
     extra_args=""
     [ "$ir" = "true" ] && extra_args="$extra_args --ir"
