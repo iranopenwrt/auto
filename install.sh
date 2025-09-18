@@ -81,7 +81,7 @@ prompt_yes_no() {
 
 # Function to check GitHub connectivity by downloading lib.sh
 githubtest() {
-    local lib_url="https://raw.githubusercontent.com/iranopenwrt/auto/refs/heads/main/lib.sh"
+    local lib_url="https://github.com/iranopenwrt/auto/releases/latest/download/lib.sh"
     local lib_file="$(pwd)/lib.sh"
 
     info "Checking GitHub connectivity by downloading lib.sh from $lib_url..."
@@ -225,17 +225,17 @@ if [ "$install_passwall2" = "true" ]; then
     extra_args=""
     [ "$ir" = "true" ] && extra_args="$extra_args --ir"
     [ "$tcp_all" = "true" ] && extra_args="$extra_args --tcp-all"
-    execute_script "install_passwall2.sh" "https://raw.githubusercontent.com/iranopenwrt/auto/refs/heads/main/install_passwall2.sh" "$extra_args"
+    execute_script "install_passwall2.sh" "https://github.com/iranopenwrt/auto/releases/latest/download/install_passwall2.sh" "$extra_args"
 fi
 
 if [ "$install_amneziawg" = "true" ]; then
-    execute_script "install_amneziawg.sh" "https://raw.githubusercontent.com/iranopenwrt/auto/refs/heads/main/install_amneziawg.sh" ""
+    execute_script "install_amneziawg.sh" "https://github.com/iranopenwrt/auto/releases/latest/download/install_amneziawg.sh" ""
 fi
 
 if [ "$install_pbr" = "true" ]; then
     extra_args=""
     [ "$ir" = "true" ] && extra_args="$extra_args --ir"
-    execute_script "install_pbr.sh" "https://raw.githubusercontent.com/iranopenwrt/auto/refs/heads/main/install_pbr.sh" "$extra_args"
+    execute_script "install_pbr.sh" "https://github.com/iranopenwrt/auto/releases/latest/download/install_pbr.sh" "$extra_args"
 fi
 
 success "All requested installations completed."
