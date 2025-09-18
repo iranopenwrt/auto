@@ -6,7 +6,7 @@
 # Supports additional options for Passwall2 and PBR installation.
 # Installs only specified components without prompts when flags are provided; others default to no.
 # If no arguments are provided, prompts for Y/n for each installation.
-# Skips downloading scripts if they already exist in /tmp/.
+# Skips downloading scripts if they already exist in current directory.
 #
 # Usage: ./install.sh [--passwall2] [--ir] [--tcp-all] [--amneziawg] [--pbr]
 #   --passwall2: Install Passwall2 without prompt
@@ -15,7 +15,7 @@
 #   --amneziawg: Install AmneziaWG without prompt
 #   --pbr: Install PBR without prompt
 #
-# Copyright (C) 2025 Your Name or Organization
+# Copyright (C) 2025 IranWrt
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -82,7 +82,7 @@ prompt_yes_no() {
 # Function to check GitHub connectivity by downloading lib.sh
 githubtest() {
     local lib_url="https://raw.githubusercontent.com/iranopenwrt/auto/refs/heads/main/lib.sh"
-    local lib_file="/tmp/lib.sh"
+    local lib_file="$(pwd)/lib.sh"
 
     info "Checking GitHub connectivity by downloading lib.sh from $lib_url..."
     wget -q -O "$lib_file" "$lib_url" 2>&1
@@ -122,8 +122,8 @@ check_dns() {
 
 # Function to check package download
 check_package_download() {
-    local lib_file="/tmp/lib.sh"
-    [ -f "$lib_file" ] || error "lib.sh not found in /tmp/. Please run githubtest first."
+    local lib_file="$(pwd)/lib.sh"
+    [ -f "$lib_file" ] || error "lib.sh not found. Please run githubtest first."
 
     # Source lib.sh if it contains necessary functions (e.g., check_openwrt_version)
     if [ -s "$lib_file" ]; then
@@ -152,10 +152,10 @@ execute_script() {
     local script_name="$1"
     local url="$2"
     local extra_args="$3"
-    local temp_script="/tmp/$script_name"
+    local temp_script="$(pwd)/$script_name"
 
-    if [ -f "$temp_script" ] && [ -x "$temp_script" ]; then
-        info "Script $script_name already exists and is executable, skipping download."
+    if [ -f "$temp_script" ]; then
+        info "Script $script_name already exists, skipping download."
     else
         info "Downloading $script_name from $url..."
         wget -O "$temp_script" "$url"
