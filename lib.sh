@@ -106,10 +106,10 @@ check_openwrt_version() {
         info "uci commit network"
         info "Download the sysupgrade image and update using 'sysupgrade' command."
         error "Please upgrade before running this script."
-    elif [ "$major_version" -eq 24 ] && [ "$minor_version" != "10.2" ]; then
+    elif [ "$major_version" -eq 24 ] && [ "$minor_version" != "10.3" ]; then
         warning "You are using an outdated 24.10.x version ($distrib_release)."
-        info "Please update to the latest 24.10.2 for your device from the link below:"
-        info "https://firmware-selector.openwrt.org/?version=24.10.2&target=$target&id=$device_id"
+        info "Please update to the latest 24.10.3 for your device from the link below:"
+        info "https://firmware-selector.openwrt.org/?version=24.10.3&target=$target&id=$device_id"
         info "Recommended: Add the following packages to the 'Installed Packages' dialog on the Firmware Selector page:"
         info "$recommended_packages"
         info "If needed, you can apply Script to run on first boot (uci-defaults), for example:"
