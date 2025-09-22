@@ -266,21 +266,30 @@ if [ $iran_hosted_domains -eq 1 ]; then
     done
     success "v2ray-geosite-ir installed."
 
-    info "Editing configurations for Iran..."
-    files="/etc/config/passwall2 /usr/share/passwall2/0_default_config"
-    for file in $files; do
-        if [ ! -f "$file" ]; then
-            warning "$file does not exist. Skipping edits for this file."
-            continue
+    info "Replacing configurations for Iran..."
+    if [ is_installed "luci-app-passwall2" ] && [ is_installed "v2ray-geosite-ir"]; then
+        hash=$(sha256sum /usr/share/passwall2/0_default_config | awk '{print $1}')
+        if [ "$hash" != "b00ca3d09a63550f8a241398ae6493234914b7bf406a48c3fe42a4888e30d2ee" ]; then
+            local temp_script="$(pwd)/0_default_config_irhosted"
+
+            if [ -f "$temp_script" ]; then
+                info "config $script_name already exists, skipping download."
+                cp $temp_script /usr/share/passwall2/0_default_config
+                check_status "cp to /usr/share/passwall2/0_default_config"
+            else
+                wget https://github.com/iranopenwrt/auto/releases/latest/download/0_default_config_irhosted -O /usr/share/passwall2/0_default_config
+                check_status "wget 0_default_config_irhosted"
+            fi
+            cp /usr/share/passwall2/0_default_config /etc/config/passwall2
+            check_status "cp to /etc/config/passwall2"
+            success "Configuration replaced."
+        else
+            warning "Configuration file hash matches expected value. Skipping replacement."
         fi
-        sed -i "s/China/Iran/g" "$file"
-        check_status "sed China to Iran in $file"
-        sed -i "s/geoip:cn/geoip:ir/g" "$file"
-        check_status "sed geoip:cn to geoip:ir in $file"
-        sed -i "s/geosite:cn/geosite:category-ir\\next:iran.dat:all/g" "$file"
-        check_status "sed geosite:cn to Iran-specific in $file"
-    done
-    success "Configurations edited."
+    else
+        warning "packages luci-app-passwall2 and v2ray-geosite-ir are not installed. Skipping configuration replacement."
+    fi
+
 
     # Substep: Add rebind domains
     info "Adding rebind domains..."
