@@ -190,7 +190,7 @@ while [ $# -gt 0 ]; do
         --passwall2|--paswall2) install_passwall2=true ;;
         --ir) ir=true ;;
         --tcp|--tcp-all) tcp_all=true ;;
-        --amneziawg|--amneziaawg) install_amneziawg=true ;;
+        --amnezia|--amneziawg|--amneziaawg) install_amneziawg=true ;;
         --pbr) install_pbr=true ;;
         *) warning "Unknown argument: $1" ;;
     esac
