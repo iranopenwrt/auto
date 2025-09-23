@@ -272,8 +272,10 @@ if [ $iran_hosted_domains -eq 1 ]; then
     if  is_installed "luci-app-passwall2" && is_installed "v2ray-geosite-ir"; then
         hash=$(sha256sum /usr/share/passwall2/0_default_config | awk '{print $1}')
         if [ "$hash" != "b00ca3d09a63550f8a241398ae6493234914b7bf406a48c3fe42a4888e30d2ee" ]; then
-            offline_config="$(pwd)/0_default_config_irhosted"
-
+            
+            config_name="0_default_config_irhosted"
+            [ -f "$(pwd)/resources/$config_name" ] && offline_config="$(pwd)/resources/$config_name"
+            [ -f "$(pwd)/$config_name" ] && offline_config="$(pwd)/$config_name"
             if [ -f "$offline_config" ]; then
                 info "offline config already exists, skipping download."
                 cp $offline_config /usr/share/passwall2/0_default_config
@@ -284,7 +286,7 @@ if [ $iran_hosted_domains -eq 1 ]; then
             fi
             cp /usr/share/passwall2/0_default_config /etc/config/passwall2
             check_status "cp to /etc/config/passwall2"
-            success "resetting passwall2 configuration."
+            success "Added passwall2 IR configuration."
         else
             warning "Configuration file hash matches expected value. Skipping replacement."
         fi
