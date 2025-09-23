@@ -107,7 +107,7 @@ if [ "$ir" = "true" ]; then
     if ! uci show pbr | grep -q "\.name='irip'"; then
         uci add pbr policy
         uci set pbr.@policy[-1].name='irip'
-        uci set pbr.@policy[-1].dest_addr='https://github.com/iranopenwrt/auto/releases/latest/download/pbr-iplist-iran-v4'
+        uci set pbr.@policy[-1].dest_addr='https://raw.githubusercontent.com/iranopenwrt/auto/refs/heads/main/resources/pbr-iplist-iran-v4'
         uci set pbr.@policy[-1].interface='wan'
     else
         info "Policy 'irip' already exists; skipping addition."
