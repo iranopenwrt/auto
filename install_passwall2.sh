@@ -5,9 +5,9 @@
 # Optional features can be enabled via command-line arguments or user prompts.
 # Skips repository key and addition if repositories exist and initial update succeeds.
 #
-# Usage: ./install_passwall2.sh [--ir] [--tcp-all]
+# Usage: ./install_passwall2.sh [--ir] [--rebind]
 #   --ir: Automatically add Iranian rebind domains and configurations without prompt
-#   --tcp-all: Automatically forward all TCP traffic (ports 1:65535) without prompt
+#   --rebind: Allow iranian vulnrable websitest to rebind to local ip addresses.
 #
 # Copyright (C) 2025 IranWRT
 #
@@ -28,7 +28,7 @@
 . $(pwd)/lib.sh
 # Parse command-line arguments
 iran_hosted_domains=0
-tcp_all=0
+rebind=0
 
 
 # If no arguments were provided, prompt for installations
@@ -37,8 +37,8 @@ if [ $# -eq 0 ]; then
         iran_hosted_domains=true
     fi
 
-    if prompt_yes_no "Do you want to forward all TCP traffic (ports 1:65535) instead of common ports? (Optional)"; then
-        tcp_all=true
+    if prompt_yes_no "Do you want to Allow Vulnrable iranian domains to rebind to local addresses? (Optional)"; then
+        rebind=true
     fi
 fi
 
@@ -48,8 +48,8 @@ while [ $# -gt 0 ]; do
             iran_hosted_domains=1
             shift
             ;;
-        --tcp-all)
-            tcp_all=1
+        --rebind)
+            rebind=1
             shift
             ;;
         *)
@@ -291,7 +291,8 @@ if [ $iran_hosted_domains -eq 1 ]; then
     fi
 
 
-    # Substep: Add rebind domains
+     # Substep: Add rebind domains
+if [ $rebind -eq 1 ]; then
     info "Adding rebind domains..."
     domains="qmb.ir medu.ir tamin.ir ebanksepah.ir banksepah.ir gov.ir"
     for domain in $domains; do
@@ -307,24 +308,9 @@ if [ $iran_hosted_domains -eq 1 ]; then
     check_status "uci commit dhcp"
     success "Rebind domains added."
 else
-    success "Skipped Iranian website list."
+    success "Skipped adding Iranian website rebind list."
 fi
 
-# Step 8: Forward all TCP traffic
-if [ $tcp_all -eq 1 ]; then
-    info "Modifying TCP redirect ports..."
-    for file in /usr/share/passwall2/0_default_config /etc/config/passwall2; do
-        if [ ! -f "$file" ]; then
-            warning "$file does not exist. Skipping edit."
-            continue
-        fi
-        sed -i "s|option tcp_redir_ports '.*'|option tcp_redir_ports '1:65535'|" "$file"
-        check_status "sed tcp_redir_ports in $file"
-    done
-    success "TCP forward configured."
-else
-    success "Skipped TCP forward configuration."
-fi
 
 # Final message
 success "Installation and configuration of Passwall2 completed successfully."
