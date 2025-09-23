@@ -267,14 +267,14 @@ if [ $iran_hosted_domains -eq 1 ]; then
     success "v2ray-geosite-ir installed."
 
     info "Replacing configurations for Iran..."
-    if [ is_installed "luci-app-passwall2" ] && [ is_installed "v2ray-geosite-ir"]; then
+    if  is_installed "luci-app-passwall2" && is_installed "v2ray-geosite-ir"; then
         hash=$(sha256sum /usr/share/passwall2/0_default_config | awk '{print $1}')
         if [ "$hash" != "b00ca3d09a63550f8a241398ae6493234914b7bf406a48c3fe42a4888e30d2ee" ]; then
-            local temp_script="$(pwd)/0_default_config_irhosted"
+            offline_config="$(pwd)/0_default_config_irhosted"
 
-            if [ -f "$temp_script" ]; then
-                info "config $script_name already exists, skipping download."
-                cp $temp_script /usr/share/passwall2/0_default_config
+            if [ -f "$offline_config" ]; then
+                info "offline config already exists, skipping download."
+                cp $offline_config /usr/share/passwall2/0_default_config
                 check_status "cp to /usr/share/passwall2/0_default_config"
             else
                 wget https://github.com/iranopenwrt/auto/releases/latest/download/0_default_config_irhosted -O /usr/share/passwall2/0_default_config
@@ -282,7 +282,7 @@ if [ $iran_hosted_domains -eq 1 ]; then
             fi
             cp /usr/share/passwall2/0_default_config /etc/config/passwall2
             check_status "cp to /etc/config/passwall2"
-            success "Configuration replaced."
+            success "resetting passwall2 configuration."
         else
             warning "Configuration file hash matches expected value. Skipping replacement."
         fi
