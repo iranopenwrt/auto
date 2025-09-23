@@ -8,10 +8,10 @@
 # If no arguments are provided, prompts for Y/n for each installation.
 # Skips downloading scripts if they already exist in current directory.
 #
-# Usage: ./install.sh [--passwall2] [--ir] [--tcp-all] [--amneziawg] [--pbr]
+# Usage: ./install.sh [--passwall2] [--ir] [--rebind] [--amneziawg] [--pbr]
 #   --passwall2: Install Passwall2 without prompt
 #   --ir: Enable Iranian rebind domains for Passwall2 and PBR
-#   --tcp-all: Forward all TCP traffic for Passwall2
+#   --rebind: Allow iranian vulnrable websitest to rebind to local ip addresses.
 #   --amneziawg: Install AmneziaWG without prompt
 #   --pbr: Install PBR without prompt
 #
@@ -181,7 +181,7 @@ original_arg_count=$#
 # Parse command-line arguments
 install_passwall2=false
 ir=false
-tcp_all=false
+rebind=false
 install_amneziawg=false
 install_pbr=false
 
@@ -189,7 +189,7 @@ while [ $# -gt 0 ]; do
     case "$1" in
         --passwall2|--paswall2) install_passwall2=true ;;
         --ir) ir=true ;;
-        --tcp|--tcp-all) tcp_all=true ;;
+        --rebind) rebind=true ;;
         --amnezia|--amneziawg|--amneziaawg) install_amneziawg=true ;;
         --pbr) install_pbr=true ;;
         *) warning "Unknown argument: $1" ;;
@@ -224,7 +224,7 @@ fi
 if [ "$install_passwall2" = "true" ]; then
     extra_args=""
     [ "$ir" = "true" ] && extra_args="$extra_args --ir"
-    [ "$tcp_all" = "true" ] && extra_args="$extra_args --tcp-all"
+    [ "$rebind" = "true" ] && extra_args="$extra_args --rebind"
     execute_script "install_passwall2.sh" "https://github.com/iranopenwrt/auto/releases/latest/download/install_passwall2.sh" "$extra_args"
 fi
 
