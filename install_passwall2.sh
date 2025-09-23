@@ -266,6 +266,8 @@ if [ $iran_hosted_domains -eq 1 ]; then
     done
     success "v2ray-geosite-ir installed."
 
+
+
     info "Replacing configurations for Iran..."
     if  is_installed "luci-app-passwall2" && is_installed "v2ray-geosite-ir"; then
         hash=$(sha256sum /usr/share/passwall2/0_default_config | awk '{print $1}')
@@ -290,7 +292,7 @@ if [ $iran_hosted_domains -eq 1 ]; then
         warning "packages luci-app-passwall2 and v2ray-geosite-ir are not installed. Skipping configuration replacement."
     fi
 
-
+fi
      # Substep: Add rebind domains
 if [ $rebind -eq 1 ]; then
     info "Adding rebind domains..."
