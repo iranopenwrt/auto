@@ -36,7 +36,7 @@ check_amneziawg_requirements() {
     distrib_release="$DISTRIB_RELEASE"
     target="$DISTRIB_TARGET"
     device_id="$DISTRIB_ID"
-    recommended_packages="kmod-amneziawg amneziawg-tools luci-app-amneziawg"
+    recommended_packages="kmod-amneziawg amneziawg-tools luci-proto-amneziawg"
     check_openwrt_version "$major_version" "$minor_version" "$distrib_release" "$target" "$device_id" "$recommended_packages"
 }
 
@@ -74,7 +74,7 @@ ARCH_SUFFIX="${DISTRIB_ARCH}_${TARGET_MOD}"
 info "Detected architecture suffix: ${ARCH_SUFFIX}"
 
 # List of packages to install
-PACKAGES="kmod-amneziawg amneziawg-tools luci-app-amneziawg"
+PACKAGES="kmod-amneziawg amneziawg-tools luci-proto-amneziawg"
 
 # Update opkg package lists
 info "Updating package lists..."
