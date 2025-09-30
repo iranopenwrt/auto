@@ -52,7 +52,7 @@ chmod +x install.sh
 
 * `--passwall2`: نصب Passwall2 بدون پرسش.
 * `--ir`: فعال‌سازی لیست‌های جغرافیایی ایرانی (توصیه برای کاربران ایرانی).
-* `--tcp-all`: هدایت تمام ترافیک TCP (پورت‌های 1 تا 65535) از طریق پروکسی.
+* `--rebind`: اجازه دادن به سایتهای ایرانی برای استفاده از ضعف امنیتی rebind.
 * `--amneziawg`: نصب AmneziaWG بدون پرسش.
 
 ### مثال:
@@ -63,12 +63,12 @@ cd /tmp/ && wget -O install.sh https://github.com/iranopenwrt/auto/releases/late
 
 نصب پسوال ۲ بهمراه لیست وبسایتها و آدرسهای آیپی ایران مناسب برای روترهای دارای حداقل پردازنده Arm 64 دو هسته ای و ۲۵۶ مگابایت رم(‌۵۱۲ مگ رم به بالا پیشنهاد میشود):
 ```sh
-cd /tmp/ && wget -O install.sh https://github.com/iranopenwrt/auto/releases/latest/download/install.sh && sh install.sh --passwall2 --ir --tcp-all
+cd /tmp/ && wget -O install.sh https://github.com/iranopenwrt/auto/releases/latest/download/install.sh && sh install.sh --passwall2 --ir --rebind
 ```
  نصب پسوال۲ بهمراه لیست وبسایتها و آدرسهای آیپی ایران و AmneziaWG. برای استفاده ترکیبی از پروتوکل ها حداقل پردازنده Arm 64 چهار هسته ای و ۱ گیگابایت رم:
 
 ```sh
-cd /tmp/ && wget -O install.sh https://github.com/iranopenwrt/auto/releases/latest/download/install.sh && sh install.sh --passwall2 --ir --tcp-all --amneziawg
+cd /tmp/ && wget -O install.sh https://github.com/iranopenwrt/auto/releases/latest/download/install.sh && sh install.sh --passwall2 --ir --rebind --amneziawg
 ```
 ---
 
