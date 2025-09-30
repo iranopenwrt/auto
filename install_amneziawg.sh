@@ -25,7 +25,7 @@
 . $(pwd)/lib.sh
 
 # Define version and base URL for package downloads
-VERSION="24.10.2"
+VERSION="24.10.3"
 BASE_URL="https://github.com/Slava-Shchipunov/awg-openwrt/releases/download/v${VERSION}"
 
 # Function to check OpenWRT version
