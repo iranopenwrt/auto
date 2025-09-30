@@ -146,3 +146,7 @@ PING 8.8.8.8 (8.8.8.8): 56 data bytes
 
 اگر مشکلی داشتید، لطفاً در بخش **Issues** این ریپو گزارش دهید.
 موفق باشید! 🚀
+
+                        
+## Stargazers over time
+[![Stargazers over time](https://starchart.cc/iranopenwrt/auto.svg?variant=dark)](https://starchart.cc/iranopenwrt/auto)
