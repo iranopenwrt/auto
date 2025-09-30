@@ -46,7 +46,7 @@ coreutils coreutils-base64 coreutils-nohup curl ip-full kmod-inet-diag kmod-netl
 
 ```sh
 cd /tmp/
-wget -O install.sh https://https://github.com/iranopenwrt/auto/releases/latest/download/install.sh
+wget -O install.sh https://github.com/iranopenwrt/auto/releases/latest/download/install.sh
 chmod +x install.sh
 ```
 
