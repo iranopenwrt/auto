@@ -76,7 +76,7 @@ else
     if is_installed "dnsmasq"; then
         info "To ensure compatibility, consider including these packages in a firmware upgrade via the OpenWrt Firmware Selector:"
         info "$RECOMMENDED_PACKAGES"
-        info "Visit: https://firmware-selector.openwrt.org/?version=24.10.2&target=$TARGET&id=$DEVICE_ID"
+        info "Visit: https://firmware-selector.openwrt.org/?version=24.10.4&target=$TARGET&id=$DEVICE_ID"
         opkg remove dnsmasq
         check_status "opkg remove dnsmasq"
     fi
