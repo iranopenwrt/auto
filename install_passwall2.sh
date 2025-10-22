@@ -1,6 +1,6 @@
 #!/bin/ash
 #
-# This script installs and configures Passwall2 on OpenWRT 24.10.2.
+# This script installs and configures Passwall2 on OpenWRT 24.10.4.
 # It follows the provided tutorial steps automatically, verifying each step.
 # Optional features can be enabled via command-line arguments or user prompts.
 # Skips repository key and addition if repositories exist and initial update succeeds.
@@ -154,7 +154,7 @@ else
     if is_installed "dnsmasq"; then
         info "To ensure compatibility, consider including these packages in a firmware upgrade via the OpenWrt Firmware Selector:"
         info "$RECOMMENDED_PACKAGES"
-        info "Visit: https://firmware-selector.openwrt.org/?version=24.10.2&target=$TARGET&id=$DEVICE_ID"
+        info "Visit: https://firmware-selector.openwrt.org/?version=24.10.4&target=$TARGET&id=$DEVICE_ID"
         opkg remove dnsmasq
         check_status "opkg remove dnsmasq"
     fi
@@ -175,7 +175,7 @@ for pkg in kmod-nft-tproxy kmod-nft-socket wget-ssl; do
 done
 info "To ensure compatibility, consider including these packages in a firmware upgrade via the OpenWrt Firmware Selector:"
 info "$RECOMMENDED_PACKAGES"
-info "Visit: https://firmware-selector.openwrt.org/?version=24.10.2&target=$TARGET&id=$DEVICE_ID"
+info "Visit: https://firmware-selector.openwrt.org/?version=24.10.4&target=$TARGET&id=$DEVICE_ID"
 success "Prerequisites installed."
 
 # Check if Passwall2 repositories are already present
