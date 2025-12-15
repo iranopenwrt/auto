@@ -2,7 +2,7 @@ name: Update Iran IP list from v2fly/geoip
 
 on:
   schedule:
-    - cron: '0 0 */2 * *'  
+    - cron: '0 0 */30 * *'  
   workflow_dispatch: {}
 
 permissions:
