@@ -1,12 +1,12 @@
 #!/bin/ash
 #
-# This script installs and configures Passwall2 on OpenWRT 24.10.4.
+# This script installs and configures Passwall2 on OpenWRT 24.10.5.
 # It follows the provided tutorial steps automatically, verifying each step.
 # Optional features can be enabled via command-line arguments or user prompts.
 # Skips repository key and addition if repositories exist and initial update succeeds.
 #
 #
-# Copyright (C) 2025 IranWRT
+# Copyright (C) 2026 IranWRT
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -87,22 +87,22 @@ check_openwrt_version() {
     if [ "$major_version" -lt 24 ] 2>/dev/null; then
         warning "You are using an outdated OpenWrt version ($distrib_release)."
         info "Please perform a clean update to the latest stable version using the OpenWrt Firmware Selector:"
-        info "https://firmware-selector.openwrt.org/?version=24.10.4&target=$target&id=$device_id"
+        info "https://firmware-selector.openwrt.org/?version=24.10.5&target=$target&id=$device_id"
         info "Recommended: Add the following packages to the 'Installed Packages' dialog on the Firmware Selector page:"
         info "$recommended_packages"
         info "If needed, you can apply Script to run on first boot (uci-defaults), for example:"
-        info "uci set network.lan.ipaddr='192.168.3.1'"
+        info "uci set network.lan.ipaddr='192.168.103.1'"
         info "uci commit network"
         info "Download the appropriate factory image and follow the installation instructions for your device."
         error "Please upgrade before running this script."
-    elif [ "$major_version" -eq 24 ] && [ "$minor_version" != "10.4" ]; then
+    elif [ "$major_version" -eq 24 ] && [ "$minor_version" != "10.5" ]; then
         warning "You are using an outdated 24.10.x version ($distrib_release)."
-        info "Please update to the latest 24.10.4 for your device from the link below:"
-        info "https://firmware-selector.openwrt.org/?version=24.10.4&target=$target&id=$device_id"
+        info "Please update to the latest 24.10.5 for your device from the link below:"
+        info "https://firmware-selector.openwrt.org/?version=24.10.5&target=$target&id=$device_id"
         info "Recommended: Add the following packages to the 'Installed Packages' dialog on the Firmware Selector page:"
         info "$recommended_packages"
         info "If needed, you can apply Script to run on first boot (uci-defaults), for example:"
-        info "uci set network.lan.ipaddr='192.168.3.1'"
+        info "uci set network.lan.ipaddr='192.168.1033.1'"
         info "uci commit network"
         info "Download the sysupgrade image, update using 'sysupgrade', and rerun this script after upgrading."
         error "Please upgrade before running this script."
