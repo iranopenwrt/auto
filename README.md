@@ -1,5 +1,21 @@
 # نصب خودکار Passwall2 و AmneziaWG بر روی OpenWrt
 
+
+
+## نصب سریع 
+### نسخه پایدار
+-پسوال۲ و امنزیا همزمان با تمام مخلفات (‌پیشنهاد برای روترهای قوی دارای رم ۵۱۲ مگ به بالا) :
+```sh
+root@OpenWrt:~# cd /tmp/ && wget -O install.sh https://raw.githubusercontent.com/iranopenwrt/auto/main/install.sh && sh install.sh --passwall2 --ir --rebind --amnezia
+```
+### نسخه آزمایشی ⚠️ **خطر آجرشدگی**:  
+این نسخه شامل آخرین امکانات برای کاربران پیشرفته تر در نظر گرفته شده
+
+```sh
+root@OpenWrt:~# cd /tmp/ && wget -O install.sh https://github.com/iranopenwrt/auto/raw/refs/heads/main/install.sh &&  sh install.sh --passwall2 --ir --rebind --amnezia
+```
+
+
 این پروژه یک اسکریپت ساده برای نصب ابزارهای **Passwall2** و **AmneziaWG** روی سیستم‌عامل OpenWrt است.
 
 ⚠️ **نکته مهم**: این اسکریپت برای روترهایی طراحی شده که OpenWrt نسخه `24.10.4` روی آن‌ها نصب شده است. اگر نسخه قدیمی‌تری دارید، ابتدا روتر خود را به‌روزرسانی کنید.
