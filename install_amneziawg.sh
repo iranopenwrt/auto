@@ -1,6 +1,6 @@
 #!/bin/ash
 #
-# This script installs and configures AmneziaWG from OpenWRT 24.10.4.
+# This script installs and configures AmneziaWG from OpenWRT 24.10.5.
 # It downloads and installs packages based on device architecture, using functions from lib.sh.txt.
 #
 # Usage: ./install_amneziawg.sh
@@ -25,7 +25,7 @@
 . $(pwd)/lib.sh
 
 # Define version and base URL for package downloads
-VERSION="24.10.4"
+VERSION="24.10.5"
 BASE_URL="https://github.com/Slava-Shchipunov/awg-openwrt/releases/download/v${VERSION}"
 
 # Function to check OpenWRT version
