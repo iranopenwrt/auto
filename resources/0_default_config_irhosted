@@ -118,6 +118,7 @@ config shunt_rules 'Iran'
 	option remarks 'Iran'
 	option network 'tcp,udp'
 	option ip_list 'geoip:ir
+geoip:private
 rule-set:remote:https://raw.githubusercontent.com/lyc8503/sing-box-rules/rule-set-geoip/geoip-ir.srs'
 	option domain_list 'geosite:category-ir
 ext:iran.dat:all
