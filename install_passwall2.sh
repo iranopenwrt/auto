@@ -201,7 +201,7 @@ else
     if [ -f "/etc/opkg/keys/$(opkg-key fingerprint passwall.pub 2>/dev/null)" ]; then
         warning "Passwall2 key already added. Skipping."
     else
-        wget -O passwall.pub https://master.dl.sourceforge.net/project/openwrt-passwall-build/passwall.pub
+        wget -O passwall.pub https://master.dl.sourceforge.net/project/openwrt-passwall-build/ipk.pub
         check_status "wget passwall.pub"
         opkg-key add passwall.pub
         check_status "opkg-key add"
