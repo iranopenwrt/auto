@@ -63,7 +63,8 @@ config global_singbox
 config shunt_rules 'Iran'
 	option remarks 'Iran'
 	option network 'tcp,udp'
-	option domain_list 'geosite:ir
+	option domain_list 'geosite:category-ir
+ext:iran.dat:all
 #rule-set:remote:https://raw.githubusercontent.com/Chocolate4U/Iran-sing-box-rules/rule-set/geosite-ir.srs'
 	option ip_list 'geoip:ir
 #rule-set:remote:https://raw.githubusercontent.com/Chocolate4U/Iran-sing-box-rules/rule-set/geoip-ir.srs'
