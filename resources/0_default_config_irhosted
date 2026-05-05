@@ -6,7 +6,7 @@ config global
 	option client_proxy '1'
 	option socks_enabled '0'
 	option acl_enable '0'
-	option node 'myshunt'
+	option node 'rulenode'
 	option direct_dns_protocol 'auto'
 	option direct_dns_query_strategy 'UseIP'
 	option remote_dns_protocol 'tcp'
@@ -30,7 +30,7 @@ config global_forwarding
 	option tcp_redir_ports '1:65535'
 	option udp_redir_ports '1:65535'
 	option accept_icmp '0'
-	option use_nft '1'
+	option prefer_nft '1'
 	option tcp_proxy_way 'redirect'
 	option ipv6_tproxy '0'
 
@@ -46,89 +46,48 @@ config global_rules
 	option geosite_update '1'
 	option geoip_update '1'
 	option v2ray_location_asset '/usr/share/v2ray/'
-	option enable_geoview '1'
+	option geoip_url 'https://github.com/Loyalsoldier/geoip/releases/latest/download/geoip.dat'
+	option geosite_url 'https://github.com/Loyalsoldier/v2ray-rules-dat/releases/latest/download/geosite.dat'
 
 config global_app
+	option geoview_file '/usr/bin/geoview'
 	option xray_file '/usr/bin/xray'
 	option hysteria_file '/usr/bin/hysteria'
 	option sing_box_file '/usr/bin/sing-box'
 
 config global_subscribe
 	option filter_keyword_mode '1'
-	list filter_discard_list 'باقی مانده'
-	list filter_discard_list 'انقضا'
-	list filter_discard_list 'expire'
-	list filter_discard_list 'حجم'
 	
 config global_singbox
-	option sniff_override_destination '0'
-	option geoip_path '/usr/share/singbox/geoip.db'
-	option geoip_url 'https://github.com/MetaCubeX/meta-rules-dat/releases/download/latest/geoip.db'
-	option geosite_path '/usr/share/singbox/geosite.db'
-	option geosite_url 'https://github.com/MetaCubeX/meta-rules-dat/releases/download/latest/geosite.db'
-
-config nodes 'myshunt'
-	option remarks 'شیر اصلی تفکیک'
-	option type 'Xray'
-	option protocol '_shunt'
-	option Proxy '_default'
-	option Iran '_direct'
-	option QUIC '_blackhole'
-	option default_node '_direct'
-	option domainStrategy 'IPOnDemand'
-	option domainMatcher 'hybrid'
-
-config shunt_rules 'OpenAI'
-	option remarks 'OpenAI'
-	option network 'tcp,udp'
-	option domain_list 'geosite:openai
-rule-set:remote:https://raw.githubusercontent.com/lyc8503/sing-box-rules/rule-set-geosite/geosite-openai.srs'
-
-config shunt_rules 'Proxy'
-	option network 'tcp,udp'
-	option remarks 'Proxy'
-	option domain_list 'ext:iran.dat:proxy
-rule-set:remote:https://github.com/bootmortis/sing-geosite/releases/latest/download/geosite-proxy.srs'
-	option ip_list '149.154.160.0/20
-91.108.4.0/22
-91.108.56.0/24
-109.239.140.0/24
-67.198.55.0/24
-8.8.4.4
-8.8.8.8
-208.67.222.222
-208.67.220.220
-1.1.1.1
-1.1.1.2
-1.0.0.1
-9.9.9.9
-149.112.112.112
-2001:67c:4e8::/48
-2001:b28:f23c::/48
-2001:b28:f23d::/48
-2001:b28:f23f::/48
-2001:b28:f242::/48
-2001:4860:4860::8888
-2001:4860:4860::8844
-2606:4700:4700::1111
-2606:4700:4700::1001
-'
 
 config shunt_rules 'Iran'
 	option remarks 'Iran'
 	option network 'tcp,udp'
+	option domain_list 'geosite:ir
+#rule-set:remote:https://raw.githubusercontent.com/Chocolate4U/Iran-sing-box-rules/rule-set/geosite-ir.srs'
 	option ip_list 'geoip:ir
-geoip:private
-rule-set:remote:https://raw.githubusercontent.com/lyc8503/sing-box-rules/rule-set-geoip/geoip-ir.srs'
-	option domain_list 'geosite:category-ir
-ext:iran.dat:all
-rule-set:remote:https://github.com/bootmortis/sing-geosite/releases/latest/download/geosite-all.srs'
+#rule-set:remote:https://raw.githubusercontent.com/Chocolate4U/Iran-sing-box-rules/rule-set/geoip-ir.srs'
 
-config shunt_rules 'QUIC'
-	option remarks 'QUIC'
-	option port '443'
-	option network 'udp'
+config nodes 'examplenode'
+	option remarks 'Example'
+	option type 'Xray'
+	option protocol 'socks'
+	option address 'passwall2.github'
+	option port '1080'
+	option tls '0'
+	option transport 'raw'
+	option tcp_guise 'none'
+	option tcp_fast_open '0'
+	option tcpMptcp '0'
 
-config shunt_rules 'UDP'
-	option remarks 'UDP'
-	option network 'udp'
+config nodes 'rulenode'
+	option remarks 'rulenode'
+	option type 'Xray'
+	option protocol '_shunt'
+	option default_node 'examplenode'
+	option domainStrategy 'IPOnDemand'
+	option domainMatcher 'hybrid'
+	option write_ipset_direct '1'
+	option enable_geoview_ip '1'
+	option Iran '_direct'
+
