@@ -1,0 +1,188 @@
+<%
+local api = require "luci.passwall2.api"
+-%>
+
+<style>
+:root {color-scheme: light dark}
+.pure-g{letter-spacing:-.31em;text-rendering:optimizespeed;font-family:FreeSans,Arimo,"Droid Sans",Helvetica,Arial,sans-serif;display:-webkit-box;display:-webkit-flex;display:-ms-flexbox;display:flex;-webkit-box-orient:horizontal;-webkit-box-direction:normal;-webkit-flex-flow:row wrap;-ms-flex-flow:row wrap;flex-flow:row wrap;-webkit-align-content:flex-start;align-items:center;-ms-flex-line-pack:start;align-content:flex-start}
+@media all and (-ms-high-contrast:none),(-ms-high-contrast:active) {
+table .pure-g{display:block}
+}
+.opera-only :-o-prefocus,.pure-g{word-spacing:-.43em}
+.pure-u{display:inline-block;zoom:1;letter-spacing:normal;word-spacing:normal;vertical-align:top;text-rendering:auto}
+.pure-g [class*=pure-u]{font-family:sans-serif}
+.pure-u-1,.pure-u-1-1,.pure-u-1-12,.pure-u-1-2,.pure-u-1-24,.pure-u-1-3,.pure-u-1-4,.pure-u-1-5,.pure-u-1-6,.pure-u-1-8,.pure-u-10-24,.pure-u-11-12,.pure-u-11-24,.pure-u-12-24,.pure-u-13-24,.pure-u-14-24,.pure-u-15-24,.pure-u-16-24,.pure-u-17-24,.pure-u-18-24,.pure-u-19-24,.pure-u-2-24,.pure-u-2-3,.pure-u-2-5,.pure-u-20-24,.pure-u-21-24,.pure-u-22-24,.pure-u-23-24,.pure-u-24-24,.pure-u-3-24,.pure-u-3-4,.pure-u-3-5,.pure-u-3-8,.pure-u-4-24,.pure-u-4-5,.pure-u-5-12,.pure-u-5-24,.pure-u-5-5,.pure-u-5-6,.pure-u-5-8,.pure-u-6-24,.pure-u-7-12,.pure-u-7-24,.pure-u-7-8,.pure-u-8-24,.pure-u-9-24{display:inline-block;zoom:1;letter-spacing:normal;word-spacing:normal;vertical-align:top;text-rendering:auto}
+.pure-u-1-24{width:4.1667%}
+.pure-u-1-12,.pure-u-2-24{width:8.3333%}
+.pure-u-1-8,.pure-u-3-24{width:12.5%}
+.pure-u-1-6,.pure-u-4-24{width:16.6667%}
+.pure-u-1-5{width:20%}
+.pure-u-5-24{width:20.8333%}
+.pure-u-1-4,.pure-u-6-24{width:25%}
+.pure-u-7-24{width:29.1667%}
+.pure-u-1-3,.pure-u-8-24{width:33.3333%}
+.pure-u-3-8,.pure-u-9-24{width:37.5%}
+.pure-u-2-5{width:40%}
+.pure-u-10-24,.pure-u-5-12{width:41.6667%}
+.pure-u-11-24{width:45.8333%}
+.pure-u-1-2,.pure-u-12-24{width:50%}
+.pure-u-13-24{width:54.1667%}
+.pure-u-14-24,.pure-u-7-12{width:58.3333%}
+.pure-u-3-5{width:60%}
+.pure-u-15-24,.pure-u-5-8{width:62.5%}
+.pure-u-16-24,.pure-u-2-3{width:66.6667%}
+.pure-u-17-24{width:70.8333%}
+.pure-u-18-24,.pure-u-3-4{width:75%}
+.pure-u-19-24{width:79.1667%}
+.pure-u-4-5{width:80%}
+.pure-u-20-24,.pure-u-5-6{width:83.3333%}
+.pure-u-21-24,.pure-u-7-8{width:87.5%}
+.pure-u-11-12,.pure-u-22-24{width:91.6667%}
+.pure-u-23-24{width:95.8333%}
+.pure-u-1,.pure-u-1-1,.pure-u-24-24,.pure-u-5-5{width:100%}
+.block{margin:.5rem;padding:0;font-weight:400;font-style:normal;line-height:1;font-family:inherit;min-width:inherit;overflow-x:auto;overflow-y:hidden;border:1px solid #0000000d;border-radius:.375rem;box-shadow:0 0 2rem 0 #8898aa26}
+.img-con{margin:1rem}
+.green{font-size:.9rem;color:#2dce89}
+.red{font-size:.9rem;color:#fb6340}
+.yellow{font-size:.9rem;color:#fb9a05}
+.block img{width:48px;height:auto}
+.block h4{font-size:.8125rem;font-weight:600;margin:1rem 0 1rem 1rem;color:#8898aa!important;line-height:1.8em;min-height:48px}
+.check{cursor:pointer}
+@media screen and (max-width: 720px) {
+.block{margin:.2rem}
+.pure-u-1-4{width:50%}
+.pure-u-1-2{width:100%}
+.block h4{margin:1rem 0 1rem .5rem}
+}
+@media screen and (max-width: 480px) {
+.block img{width:36px}
+}
+.honor{width:100%;height:100px;border:1px solid #0000000d;border-radius:.375rem;box-shadow:0 0 2rem 0 #8898aa26;background-color:#222;margin-bottom:5px;border-radius:2px;overflow:hidden}
+.honor img{box-shadow:inset 0 4px 12px #00000059;width:120px;height:100px;float:right;border-top-right-radius:2px;border-bottom-right-radius:2px;background-color:#6d001a;padding:5px 10px}
+.honor ul{float:left;margin-top:18px;height:50px}
+.honor li{list-style:none;font-size:1.2rem;line-height:1;color:#cccccc}
+.honor li:first-child{margin-bottom:10px;font-size:2rem;font-weight:700;color: light-dark(#2e2e2eef, #cccccc)}
+.honor li:nth-child(2){display:inline-block;padding:5px;border-radius:5px;}
+.honor li:nth-child(2){background:#222B33}
+</style>
+<fieldset id="_passwall2_status_fieldset" class="cbi-section">
+<div class="honor">
+<ul>
+<li>PassWall 2</li>
+<li>ver 26-X7</li>
+</ul>
+</div>
+	<div class="pure-g status">
+		<div class="pure-u-1-4">
+			<div class="block pure-g">
+				<div class="pure-u-1-3">
+					<div class="img-con">
+						<img src="data:image/png;base64,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">
+					</div>
+				</div>
+				<div class="pure-u-2-3">
+					<h4 id="status_node">Core<br /><span class="red"><%:Disabled%></span></h4>
+				</div>
+			</div>
+		</div>
+		<div class="pure-u-1-4 check" onclick="check_connect('arvan', 'https://www.arvancloud.ir/fa')">
+			<div class="block pure-g">
+				<div class="pure-u-1-3">
+					<div class="img-con">
+						<img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCA0MCA0MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTI1LjkzNiAzLjYxNTg2TDI2LjAxNTMgMy43NzYwMkwzOS4zNDYxIDMwLjQzNjhDMzkuNzY3NCAzMS4zMTA1IDQwLjAwNDEgMzIuMjkwOSA0MC4wMDQxIDMzLjMyNjlDNDAuMDA0MSAzNy4wMDg0IDM3LjAyMDIgMzkuOTkyMyAzMy4zMzg3IDM5Ljk5MjNDMzAuODA3MSAzOS45OTIzIDI4LjYwNiAzOC41ODE5IDI3LjQ3NzcgMzYuNTA0MUwyNy40NjMzIDM2LjQ3NjdDMjcuNDAxOSAzNi4zNjQ5IDI3LjM0NjQgMzYuMjUxNiAyNy4yOTMgMzYuMTM2MkwyNy4yOTE2IDM2LjEzMjZMMTQuMTE0NSA5Ljc4MTI4TDE0LjEwOCA5Ljc2ODNDMTQuMDcwNSA5LjY5ODMyIDE0LjAzMzcgOS42MjY4OSAxMy45OTk3IDkuNTU0NzVMMTMuOTg2OCA5LjUyNzMzQzEzLjU3MzQgOC42NjAxNiAxMy4zNDE4IDcuNjkwNTUgMTMuMzQxOCA2LjY2NjFDMTMuMzQxOCA0LjExMDA0IDE0Ljc3OTYgMS44OTA4OSAxNi44ODk4IDAuNzczMzgzQzE2Ljk3OTMgMC43MjUwNDcgMTcuMDY5NSAwLjY3OTU5NiAxNy4xNjA0IDAuNjM4NDc0TDE3LjE2OTggMC42MzM0MjRDMTguMDMwNCAwLjIyNzk3NSAxOC45OTIxIDIuNjU1MDdlLTA3IDIwLjAwNzkgMi42NTUwN2UtMDdDMjIuNTkwNyAtMC4wMDA3MjExNzQgMjQuODMgMS40Njg4NSAyNS45MzYgMy42MTU4NloiIGZpbGw9IiMwMEJBQkEiLz4KPHBhdGggZD0iTTEzLjMzMDMgMzMuMzM3QzEzLjMzMDMgMzcuMDE4NCAxMC4zNDU4IDQwLjAwMjIgNi42NjUxNiA0MC4wMDIyQzIuOTgzNzcgNDAuMDAyMiAwIDM3LjAxODQgMCAzMy4zMzdDMCAyOS42NTU3IDIuOTgzNzcgMjYuNjcxOSA2LjY2NTE2IDI2LjY3MTlDMTAuMzQ1OCAyNi42NzE5IDEzLjMzMDMgMjkuNjU2NCAxMy4zMzAzIDMzLjMzN1oiIGZpbGw9IiMwMEJBQkEiLz4KPC9zdmc+Cg==" />
+					</div>
+				</div>
+				<div class="pure-u-2-3">
+					<h4 id="status_arvan"><%:Arvan Cloud%><br /><span id="_arvan_status" class="yellow"><%:Test%></span></h4>
+				</div>
+			</div>
+		</div>
+		<div class="pure-u-1-4 check" onclick="check_connect('youtube', 'https://www.youtube.com/')">
+			<div class="block pure-g">
+				<div class="pure-u-1-3">
+					<div class="img-con">
+						<img src="data:image/png;base64,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">
+					</div>
+				</div>
+				<div class="pure-u-2-3">
+					<h4 id="status_youtube"><%:Youtube%><br /><span id="_youtube_status" class="yellow"><%:Test%></span></h4>
+				</div>
+			</div>
+		</div>
+		<div class="pure-u-1-4 check" onclick="check_connect('twitter', 'https://x.com/')">
+			<div class="block pure-g">
+				<div class="pure-u-1-3">
+					<div class="img-con">
+						<img src="data:image/png;base64,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">
+						</div>
+				</div>
+				<div class="pure-u-2-3">
+					<h4 id="status_twitter"><%:Twitter%><br /><span id="_twitter_status" class="yellow"><%:Test%></span></h4>
+				</div>
+			</div>
+		</div>
+	  </div>
+	<script>
+
+		//<![CDATA[
+		var imgs = document.getElementsByTagName('img');
+		for (var i = 0 ; i < imgs.length; i++) {
+			document.getElementsByTagName('img')[i].setAttribute("oncontextmenu","return false;");
+			document.getElementsByTagName('img')[i].setAttribute("ondragstart","return false;");
+		}
+		XHR.poll(5, '<%=api.url("index_status")%>', null,
+			function (x, data) {
+				if (data) {
+					if (true) {
+						var status_node = document.getElementById('status_node');
+						if (status_node) {
+							var text = 'Core<br />';
+							if (data["global_status"])
+								text += '<span class="green"><%:Active%></span>';
+							else
+								text += '<span class="red"><%:Disabled%></span>';
+							status_node.innerHTML = text;
+						}
+					}
+				}
+			});
+			
+		function check_connect(type, url) {
+			var s = document.getElementById('_' + type + '_status');
+			if (s) {
+				var div = s.parentNode.parentNode.parentNode.parentNode;
+				div.removeAttribute('onclick');
+				s.innerHTML = '<%:Check...%>';
+				var sendDate = (new Date()).getTime();
+				XHR.get('<%=api.url("connect_status")%>', {
+						type: type,
+						url : url
+					},
+					function(x, rv) {
+						if (rv.ping_type && rv.ping_type == "curl") {
+							var use_time = rv.use_time;
+							if (use_time < 1000) {
+								s.className="green";
+							} else if (use_time < 2000) {
+								s.className="yellow";
+							} else {
+								s.className="red";
+							}
+							s.innerHTML = use_time + " ms";
+						} else if (rv.status) {
+							s.className="green";
+							s.innerHTML = "<%:Working...%>";
+						}
+						else {
+							s.className="red";
+							s.innerHTML = '<%:Failed!%>';
+						}
+						div.setAttribute('onclick','check_connect("' + type + '","' + url + '")');
+					}
+				);
+			}
+			return false;
+		}
+//]]>
+	</script>
+</fieldset>
